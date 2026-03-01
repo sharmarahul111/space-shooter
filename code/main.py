@@ -19,7 +19,8 @@ class Game():
 			"star": load_texture(join("images", "star.png")),
 			"laser": load_texture(join("images", "laser.png")),
 			"meteor": load_texture(join("images", "meteor.png")),
-			"explosion": [load_texture(join("images", "explosion", f"{i}.png")) for i in range(1, 29)]
+			"explosion": [load_texture(join("images", "explosion", f"{i}.png")) for i in range(1, 29)],
+			"font": load_font_ex(join("font", "Stormfaze.otf"), FONT_SIZE, ffi.NULL, 0)
 		}
 		self.star_data = [
 			(
@@ -28,7 +29,6 @@ class Game():
 				uniform(.5, 1.6)  # size
 			) for i in range(40)
 		]
-
 	def shoot_laser(self, pos):
 		self.lasers.append(Laser(self.assets["laser"], pos))
 	def draw_stars(self):
@@ -38,6 +38,11 @@ class Game():
 		self.lasers = [laser for laser in self.lasers if not laser.discard]
 		self.meteors = [meteor for meteor in self.meteors if not meteor.discard]
 		self.explosions = [explosion for explosion in self.explosions if not explosion.discard]
+	def draw_score(self):
+		score = int(get_time())
+		text = measure_text_ex(self.assets["font"], str(score), FONT_SIZE, 0)
+		draw_text_ex(self.assets["font"], str(score), Vector2(WINDOW_WIDTH/2 - text.x/2, 100), FONT_SIZE, 0, WHITE)
+		pass
 	def create_meteor(self):
 		self.meteors.append(Meteor(self.assets["meteor"]))
 	def check_collision(self):
@@ -69,17 +74,15 @@ class Game():
 		for sprite in self.lasers + self.meteors + self.explosions:
 			sprite.update(dt)
 		self.check_collision()
-		
 	def draw(self):
 		begin_drawing()
-		draw_fps(0,0)
 		clear_background(BG_COLOR)
 		self.draw_stars()
+		self.draw_score()
 		self.player.draw()
 		for sprite in self.lasers + self.meteors + self.explosions:
 			sprite.draw()
 		end_drawing()
-
 	def run(self):
 		while not window_should_close():
 			self.update()
