@@ -10,8 +10,18 @@ class Game():
 
 	def import_assets(self):
 		self.assets = {
-			"player": load_texture(join("images", "spaceship.png"))
+			"player": load_texture(join("images", "spaceship.png")),
+			"star": load_texture(join("images", "star.png"))
 		}
+		self.star_data = [
+			(
+			Vector2(randint(0, WINDOW_WIDTH), randint(0, WINDOW_HEIGHT)), #pos
+			uniform(.5, 1.6) #size
+			) for i in range(40)
+		]
+	def draw_stars(self):
+		for star in self.star_data:
+			draw_texture_ex(self.assets['star'], star[0], 0, star[1], WHITE)
 
 	def run(self):
 		while not window_should_close():
@@ -19,6 +29,7 @@ class Game():
 			self.player.update(dt)
 			begin_drawing()
 			clear_background(BG_COLOR)
+			self.draw_stars()
 			self.player.draw()
 			end_drawing()
 		close_window()
