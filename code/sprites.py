@@ -7,11 +7,15 @@ class Sprite():
 		self.speed = speed
 		self.direction = direction
 		self.size = Vector2(texture.width, texture.height)
+		self.discard = False
 	def move(self, dt):
 		self.pos.x += self.direction.x * self.speed * dt
 		self.pos.y += self.direction.y * self.speed * dt
+	def check_discard(self):
+		self.discard = not -300 < self.pos.y < WINDOW_HEIGHT + 300
 	def update(self, dt):
 		self.move(dt)
+		self.check_discard()
 	def draw(self):
 		draw_texture_v(self.texture, self.pos, WHITE)
 

@@ -31,15 +31,19 @@ class Game():
 	def draw_stars(self):
 		for star in self.star_data:
 			draw_texture_ex(self.assets["star"], star[0], 0, star[1], WHITE)
-
+	def discard_sprites(self):
+		self.lasers = [laser for laser in self.lasers if not laser.discard]
 	def update(self):
 		dt = get_frame_time()
 		self.player.update(dt)
+		self.discard_sprites()
 		for laser in self.lasers:
 			laser.update(dt)
+			print(len(self.lasers))
 
 	def draw(self):
 		begin_drawing()
+		draw_fps(0,0)
 		clear_background(BG_COLOR)
 		self.draw_stars()
 		self.player.draw()
