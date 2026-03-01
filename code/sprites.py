@@ -8,6 +8,10 @@ class Sprite():
 		self.direction = direction
 		self.size = Vector2(texture.width, texture.height)
 		self.discard = False
+		self.collision_radius = self.size.y/2
+		
+	def get_center(self):
+		return Vector2(self.pos.x + self.size.x/2, self.pos.y + self.size.y/2)
 	def move(self, dt):
 		self.pos.x += self.direction.x * self.speed * dt
 		self.pos.y += self.direction.y * self.speed * dt
@@ -41,6 +45,8 @@ class Player(Sprite):
 class Laser(Sprite):
 	def __init__(self, texture, pos):
 		super().__init__(texture, pos, LASER_SPEED, Vector2(0, -1))
+	def get_rect(self):
+		return Rectangle(self.pos.x, self.pos.y, self.size.x, self.size.y)
 
 class Meteor(Sprite):
 	def __init__(self, texture):
@@ -54,9 +60,25 @@ class Meteor(Sprite):
 	def update(self, dt):
 		super().update(dt)
 		self.rotation += 50 * dt
-
+	def get_center(self):
+		return self.pos
 	def draw(self):
 		target_rect = Rectangle(self.pos.x, self.pos.y, self.size.x, self.size.y)
 		origin = Vector2(self.size.x/2, self.size.y/2)
 		draw_texture_pro(self.texture, self.rect, target_rect, origin, self.rotation, WHITE)
 
+class ExplosionAnimation():
+	def __init__(self, pos, textures):
+		self.textures = textures
+		self.size = Vector2(textures[0].width, textures[1].height)
+		self.pos = Vector2(pos.x - self.size.x/2, pos.y-self.size.y/2)
+		self.index = 0
+		self.discard = False
+	def update(self, dt):
+		print(len(self.textures), self.index)
+		if self.index < len(self.textures) - 1:
+			self.index += 20 * dt
+		else:
+			self.discard = True
+	def draw(self):
+		draw_texture_v(self.textures[int(self.index)], self.pos, WHITE)
