@@ -16,8 +16,9 @@ class Sprite():
 		draw_texture_v(self.texture, self.pos, WHITE)
 
 class Player(Sprite):
-	def __init__(self, texture, pos):
+	def __init__(self, texture, pos, shoot_laser):
 		super().__init__(texture ,pos, PLAYER_SPEED, Vector2())
+		self.shoot_laser = shoot_laser
 
 	def input(self):
 		self.direction.x = int(is_key_down(KEY_RIGHT))-int(is_key_down(KEY_LEFT))
@@ -25,7 +26,7 @@ class Player(Sprite):
 		self.direction = vector2_normalize(self.direction)
 
 		if is_key_pressed(KEY_SPACE):
-			pass
+			self.shoot_laser(Vector2(1,2))
 	def constraint(self):
 		self.pos.x = max(0, min(self.pos.x, WINDOW_WIDTH-self.size.x))
 		self.pos.y = max(0, min(self.pos.y, WINDOW_HEIGHT-self.size.y))
