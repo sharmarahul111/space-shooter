@@ -80,7 +80,7 @@ class Meteor(Sprite):
 class ExplosionAnimation():
 	def __init__(self, pos, textures):
 		self.textures = textures
-		self.size = Vector2(textures[0].width, textures[1].height)
+		self.size = Vector2(textures[0].width, textures[0].height)
 		self.pos = Vector2(pos.x - self.size.x/2, pos.y-self.size.y/2)
 		self.index = 0
 		self.discard = False
